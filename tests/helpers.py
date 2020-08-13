@@ -5,12 +5,14 @@ import string
 import uuid
 from collections import namedtuple
 from unittest.mock import Mock, patch
+import threading
 
 import requests
 from flask.testing import FlaskClient
 from sqlalchemy.engine.url import make_url
 from sqlalchemy_utils import drop_database
 from werkzeug.datastructures import Headers
+from wsgiref.simple_server import make_server, WSGIRequestHandler
 
 from CTFd import create_app
 from CTFd.cache import cache, clear_standings
@@ -70,12 +72,15 @@ def create_ctfd(
     setup=True,
     enable_plugins=False,
     application_root="/",
+    server_name="localhost",
     config=TestingConfig,
 ):
     if enable_plugins:
         config.SAFE_MODE = False
     else:
         config.SAFE_MODE = True
+
+    config.SERVER_NAME = server_name
 
     config.APPLICATION_ROOT = application_root
     url = make_url(config.SQLALCHEMY_DATABASE_URI)
@@ -130,6 +135,26 @@ def destroy_ctfd(app):
         gc.collect()  # Garbage collect (necessary in the case of dataset freezes to clean database connections)
         cache.clear()
         drop_database(app.config["SQLALCHEMY_DATABASE_URI"])
+
+
+class LiveServer(object):
+    def __init__(self, app, host="localhost", port=8943):
+        self.app = app
+        self.server = make_server(host, port, app, handler_class=WSGIRequestHandler)
+        self.thread = threading.Thread(target=self.server.serve_forever)
+        self.thread.start()
+
+    def __enter__(self):
+        return self.server
+
+    def __exit__(self, type, value, traceback):
+        if self.thread is not None:
+            self.server.shutdown()
+            self.server.server_close()
+            self.thread.join()
+            del self.server
+
+
 
 
 def register_user(
