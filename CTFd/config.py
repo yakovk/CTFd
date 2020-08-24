@@ -210,6 +210,11 @@ class ServerConfig(object):
     # === OAUTH ===
     OAUTH_CLIENT_ID: str = empty_str_cast(config_ini["oauth"]["OAUTH_CLIENT_ID"])
     OAUTH_CLIENT_SECRET: str = empty_str_cast(config_ini["oauth"]["OAUTH_CLIENT_SECRET"])
+
+    OAUTHLOGIN_CLIENT_ID: str = empty_str_cast(config_ini["oauth"]["OAUTHLOGIN_CLIENT_ID"])
+    OAUTHLOGIN_CLIENT_SECRET: str = empty_str_cast(config_ini["oauth"]["OAUTHLOGIN_CLIENT_SECRET"])
+    OAUTHLOGIN_PROVIDER: str = empty_str_cast(config_ini["oauth"]["OAUTHLOGIN_PROVIDER"])
+    OAUTHLOGIN_CREATE_MISSING_USER: bool = empty_str_cast(config_ini["oauth"]["OAUTHLOGIN_CREATE_MISSING_USER"]) or False
 # fmt: on
 
 
