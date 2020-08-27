@@ -26,15 +26,14 @@ def load(app):
     def retrieve_user_from_database(username):
         user = Users.query.filter_by(email=username).first()
         if user is not None:
-            log('logins', "[{date}] {ip} - " + user.name + " - OAuth2 bridged user found")
+            log('logins', "[{date}] {ip} - " + username + " - OAuth2 bridged user found")
             return user
     def create_user(username, displayName):
         with app.app_context():
-            log('logins', "[{date}] {ip} - " + user.name + " - No OAuth2 bridged user found, creating user")
-            user = Users(email=username, name=displayName.strip())
+            log('logins', "[{date}] {ip} - " + username + " - No OAuth2 bridged user found, creating user")
+            user = Users(email=username, name=displayName.strip(), verified=True)
             db.session.add(user)
             db.session.commit()
-            db.session.flush()
             return user
     def create_or_get_user(username, displayName):
         user = retrieve_user_from_database(username)
@@ -43,7 +42,7 @@ def load(app):
         if create_missing_user:
             return create_user(username, displayName)
         else:
-            log('logins', "[{date}] {ip} - " + user.name + " - No OAuth2 bridged user found and not configured to create missing users")
+            log('logins', "[{date}] {ip} - " + username + " - No OAuth2 bridged user found and not configured to create missing users")
             return None
 
     ##########################
@@ -63,7 +62,9 @@ def load(app):
     }
 
     def get_azure_user():
-        user_info = flask_dance.contrib.azure.azure.get("/v1.0/me").json()
+        resp = flask_dance.contrib.azure.azure.get("/v1.0/me")
+        print(" * Azure.Get(/v1.0/me): %s" % resp.text)
+        user_info = resp.json()
         return create_or_get_user(
             username=user_info["userPrincipalName"],
             displayName=user_info["displayName"])
@@ -85,13 +86,14 @@ def load(app):
     #######################
     @provider_blueprint.route('/<string:auth_provider>/confirm', methods=['GET'])
     def confirm_auth_provider(auth_provider):
-        if not provider_users.has_key(auth_provider):
+        if auth_provider not in provider_users:
             return redirect('/')
 
         provider_user = provider_users[oauth_provider]() # Resolved lambda
-        session.regenerate()
         if provider_user is not None:
+            session.regenerate()
             login_user(provider_user)
+            db.session.close()   
         return redirect('/')
 
     app.register_blueprint(provider_blueprint, url_prefix=authentication_url_prefix)
