@@ -4,7 +4,6 @@ Flask-SQLAlchemy==2.4.3
 Flask-Caching==1.8.0
 Flask-Migrate==2.5.3
 Flask-Script==2.0.6
-Flask-Dance==3.0.0
 SQLAlchemy==1.3.17
 SQLAlchemy-Utils==0.36.6
 passlib==1.7.2
