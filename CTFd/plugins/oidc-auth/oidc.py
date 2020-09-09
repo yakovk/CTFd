@@ -49,7 +49,7 @@ def load(app):
             return None
 
     def handle_authorize(remote, token, user_info):
-        return jsonify(user_info)
+        # return jsonify(user_info)
 
         user = get_or_create_user(
             email=user_info["email"],
