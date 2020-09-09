@@ -79,6 +79,10 @@ def load(app):
         'github': lambda: get_github_user()
     }
 
+    if oauth_provider not in provider_blueprints:
+        print('** Skip loading CTFd-OAuth2 because of the unknown or unsupported OAuth provider **')
+        return
+
     provider_blueprint = provider_blueprints[oauth_provider]() # Resolved lambda
     
     #######################

@@ -12,4 +12,6 @@ CTFd/uploads/**/*
 .gitignore
 .prettierignore
 .travis.yml
+.env
 node_modules
+Pipfile.lock
