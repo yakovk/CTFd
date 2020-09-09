@@ -215,6 +215,12 @@ class ServerConfig(object):
     OAUTHLOGIN_CLIENT_SECRET: str = empty_str_cast(config_ini["oauth"]["OAUTHLOGIN_CLIENT_SECRET"])
     OAUTHLOGIN_PROVIDER: str = empty_str_cast(config_ini["oauth"]["OAUTHLOGIN_PROVIDER"])
     OAUTHLOGIN_CREATE_MISSING_USER: bool = empty_str_cast(config_ini["oauth"]["OAUTHLOGIN_CREATE_MISSING_USER"]) or False
+
+    #OIDC_CLIENT_ID: str = empty_str_cast(config_ini["oidc"]["OIDC_CLIENT_ID"])
+    #OIDC_CLIENT_SECRET: str = empty_str_cast(config_ini["oidc"]["OIDC_CLIENT_SECRET"])
+    #OIDC_AUTHORITY: str = empty_str_cast(config_ini["oidc"]["OIDC_AUTHORITY"])
+    #OIDC_LOGIN_BACKEND: str = empty_str_cast(config_ini["oidc"]["OIDC_LOGIN_BACKEND"])
+    #OIDC_CREATE_MISSING_USER: bool = empty_str_cast(config_ini["oidc"]["OIDC_CREATE_MISSING_USER"]) or False
 # fmt: on
 
 
