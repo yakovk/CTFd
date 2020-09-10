@@ -58,7 +58,7 @@ def load(app):
             if user is not None:
                 session.regenerate()
                 login_user(user)
-                log("logins", "[{date}] {ip} - {user.name} logged in")
+                log("logins", "[{date}] {ip} - {name} logged in")
                 db.session.close()
                 return redirect(url_for("challenges.listing"))
 
