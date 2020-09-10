@@ -205,6 +205,8 @@ class ServerConfig(object):
                 or 20,  # noqa: E131
             "pool_pre_ping": empty_str_cast(config_ini["optional"]["SQLALCHEMY_POOL_PRE_PING"])  # noqa: E131
                 or True,  # noqa: E131
+            "pool_recycle": int(empty_str_cast(config_ini["optional"]["SQLALCHEMY_POOL_RECYCLE"], default=0))  # noqa: E131
+                or 3600,  # noqa: E131
         }
 
     # === OAUTH ===
@@ -216,11 +218,6 @@ class ServerConfig(object):
     OAUTHLOGIN_PROVIDER: str = empty_str_cast(config_ini["oauth"]["OAUTHLOGIN_PROVIDER"])
     OAUTHLOGIN_CREATE_MISSING_USER: bool = empty_str_cast(config_ini["oauth"]["OAUTHLOGIN_CREATE_MISSING_USER"]) or False
 
-    #OIDC_CLIENT_ID: str = empty_str_cast(config_ini["oidc"]["OIDC_CLIENT_ID"])
-    #OIDC_CLIENT_SECRET: str = empty_str_cast(config_ini["oidc"]["OIDC_CLIENT_SECRET"])
-    #OIDC_AUTHORITY: str = empty_str_cast(config_ini["oidc"]["OIDC_AUTHORITY"])
-    #OIDC_LOGIN_BACKEND: str = empty_str_cast(config_ini["oidc"]["OIDC_LOGIN_BACKEND"])
-    #OIDC_CREATE_MISSING_USER: bool = empty_str_cast(config_ini["oidc"]["OIDC_CREATE_MISSING_USER"]) or False
 # fmt: on
 
 
