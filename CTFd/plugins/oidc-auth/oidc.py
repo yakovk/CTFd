@@ -29,13 +29,12 @@ def load(app):
             return user
 
     def create_user(email, name):
-        with app.app_context():
-            log('logins', "[{date}] {ip} - " + email +
-                " - No OIDC bridged user found, creating user")
-            user = Users(email=email, name=name.strip(), verified=True)
-            db.session.add(user)
-            db.session.commit()
-            return user
+        log('logins', "[{date}] {ip} - " + email +
+            " - No OIDC bridged user found, creating user")
+        user = Users(email=email, name=name.strip(), verified=True)
+        db.session.add(user)
+        db.session.commit()
+        return user
     
     def get_or_create_user(email, name):
         user = get_user(email)
@@ -51,16 +50,17 @@ def load(app):
     def handle_authorize(remote, token, user_info):
         # return jsonify(user_info)
 
-        user = get_or_create_user(
-            email=user_info["email"],
-            name=user_info["name"])
+        with app.app_context():
+            user = get_or_create_user(
+                email=user_info["email"],
+                name=user_info["name"])
 
-        if user is not None:
-            session.regenerate()
-            login_user(user)
-            log("logins", "[{date}] {ip} - {name} logged in")
-            db.session.close()
-            return redirect(url_for("challenges.listing"))
+            if user is not None:
+                session.regenerate()
+                login_user(user)
+                log("logins", "[{date}] {ip} - {user.name} logged in")
+                db.session.close()
+                return redirect(url_for("challenges.listing"))
 
         return redirect('/')
 
