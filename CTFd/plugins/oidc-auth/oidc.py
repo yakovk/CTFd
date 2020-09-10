@@ -1,6 +1,6 @@
 import os
 
-from flask import render_template, session, redirect, jsonify
+from flask import render_template, session, redirect, jsonify, url_for
 from authlib.integrations.flask_client import OAuth
 from loginpass import create_flask_blueprint
 
