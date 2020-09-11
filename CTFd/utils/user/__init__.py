@@ -164,7 +164,8 @@ def get_ip(req=None):
             break
     else:
         remote_addr = req.remote_addr
-    return remote_addr
+    # Strip the port number if included in remote_addr by proxy, e.g. X-Forwarded-For.
+    return remote_addr.split(':')[0]
 
 
 def get_current_user_recent_ips():
