@@ -8,7 +8,8 @@ IP_ADDR_LOOKUP = maxminddb.open_database(
 
 
 def lookup_ip_address(addr):
-    response = IP_ADDR_LOOKUP.get(addr)
+    # strip port from IP address if set by proxy, i.e. via X-Forwarded-For
+    response = IP_ADDR_LOOKUP.get(addr.split(':')[0])
     try:
         return response["country"]["iso_code"]
     except KeyError:
