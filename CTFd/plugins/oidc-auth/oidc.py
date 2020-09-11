@@ -48,7 +48,6 @@ def load(app):
             return None
 
     def handle_authorize(remote, token, user_info):
-        # return jsonify(user_info)
 
         with app.app_context():
             user = get_or_create_user(
@@ -58,7 +57,7 @@ def load(app):
             if user is not None:
                 session.regenerate()
                 login_user(user)
-                log("logins", "[{date}] {ip} - {name} logged in")
+                log("logins", "[{date}] {ip} - " + user.name + " logged in")
                 db.session.close()
                 return redirect(url_for("challenges.listing"))
 
